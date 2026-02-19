@@ -7,7 +7,6 @@
 
 class Preprocessor{
 public:
-    Preprocessor();
     std::vector<std::string> preprocessFully(std::string text);
 
 private:

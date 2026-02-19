@@ -1,4 +1,4 @@
-#include "preprocessing/Preprocessor.hpp"
+#include "nlp/preprocessing/Preprocessor.hpp"
 
 #include <cctype>
 
@@ -35,39 +35,66 @@ void Preprocessor::removePunctuation(std::string &text){
 
 std::vector<std::string> Preprocessor::tokenize(std::string_view text){
     std::vector<std::string> tokens;
-    tokens.reserve(10);
+    size_t start = 0;
+    const size_t n = text.size();
 
-    unsigned int token_start = 0;
-    size_t n = text.size();
+    while (start < n){
+        while (start < n && std::isspace(static_cast<unsigned char>(text[start]))) start++;
+        if (start >= n) break;
 
-    for (size_t i = 0; i < n; i++){
-        if (std::isspace(static_cast<unsigned char>(text[i]))){
-            if (token_start != i){
-                tokens.push_back(std::string{text.substr(token_start, i - token_start)});
-            }
-            token_start = i + 1;
+        size_t end = start;
+        while (end < n && !std::isspace(static_cast<unsigned char>(text[end]))) end++;
+
+        std::string token{text.substr(start, end - start)};
+        
+        if (!token.empty()) {
+            tokens.push_back(token);
         }
-    }
 
-    if (token_start < n)
-        tokens.push_back(std::string{text.substr(token_start, n)});
+        start = end;
+    }
 
     return tokens;
 }
 
 void Preprocessor::removeStopwords(std::vector<std::string> &tokens){
-    size_t current_index = 0;
-    size_t n = tokens.size();
+    std::vector<std::string> clean;
+    clean.reserve(tokens.size());
 
-    for (size_t i = 0; i < n; i++){
-        if (stopwords.find(tokens[i]) == stopwords.end()){
-            tokens[current_index++] = std::move(tokens[i]);
+    for (auto &token : tokens) {
+        if (token.empty()) continue;
+
+        if (stopwords.find(token) == stopwords.end()) {
+            clean.push_back(token);
         }
     }
-
-    tokens.resize(current_index);
+    tokens = std::move(clean);
 }
 
-void Preprocessor::stem(std::vector<std::string> &tokens){
+void Preprocessor::stem(std::vector<std::string> &tokens) {
+    std::vector<std::string> stemmed;
+    stemmed.reserve(tokens.size());
 
+    for (std::string &token : tokens){
+        if (token.size() <= 3) {
+            stemmed.push_back(token);
+            continue;
+        }
+
+        bool suffix_removed = false;
+
+        for (const auto &suffix : suffixes){
+            if (token.size() > suffix.size() + 1){ 
+                if (token.compare(token.size() - suffix.size(), suffix.size(), suffix) == 0) {
+                    token.erase(token.size() - suffix.size());
+                    suffix_removed = true;
+                    break; 
+                }
+            }
+        }
+
+        stemmed.push_back(token);
+    }
+
+    tokens = std::move(stemmed);
 }

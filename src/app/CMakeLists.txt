@@ -1,5 +1,3 @@
-cmake_minimum_required(VERSION 3.22)
-
 add_executable(EmotionDetectionService main.cpp)
 
 target_include_directories(EmotionDetectionService PRIVATE

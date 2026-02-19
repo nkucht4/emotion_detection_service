@@ -19,5 +19,8 @@ CMakeUserPresets.json
 #cmake-build-*
 
 grpc/
+protobuf/
 
 src/scripts/
+
+build/
