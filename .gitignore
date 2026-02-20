@@ -24,3 +24,5 @@ protobuf/
 src/scripts/
 
 build/
+build/src
+build/src/nlp/libnlp_module.a
