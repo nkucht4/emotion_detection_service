@@ -7,10 +7,12 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(test_preprocessor test_preprocessor.cpp)
-target_link_libraries(test_preprocessor PRIVATE nlp_module gtest_main)
+enable_testing()
+
+add_executable(test_classical_preprocessor test_classical_preprocessor.cpp)
+target_link_libraries(test_classical_preprocessor PRIVATE nlp_module gtest_main)
 
 include(GoogleTest)
-gtest_discover_tests(test_preprocessor
+gtest_discover_tests(test_classical_preprocessor
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )

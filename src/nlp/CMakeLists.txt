@@ -1,5 +1,5 @@
 add_library(nlp_module STATIC
-    preprocessing/Preprocessor.cpp
+    preprocessing/ClassicalPreprocessor.cpp
 )
 
 target_include_directories(nlp_module PUBLIC

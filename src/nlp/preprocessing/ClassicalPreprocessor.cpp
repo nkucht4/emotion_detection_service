@@ -1,8 +1,8 @@
-#include "nlp/preprocessing/Preprocessor.hpp"
+#include "nlp/preprocessing/ClassicalPreprocessor.hpp"
 
 #include <cctype>
 
-std::vector<std::string> Preprocessor::preprocessFully(std::string text){
+std::vector<std::string> ClassicalPreprocessor::preprocess(std::string text){
     lowercase(text);
     removePunctuation(text);
     
@@ -14,12 +14,12 @@ std::vector<std::string> Preprocessor::preprocessFully(std::string text){
     return tokens;
 }
 
-void Preprocessor::lowercase(std::string &text){
+void ClassicalPreprocessor::lowercase(std::string &text){
     for (char& c : text)
         c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
 }
 
-void Preprocessor::removePunctuation(std::string &text){
+void ClassicalPreprocessor::removePunctuation(std::string &text){
     std::string result;
     result.reserve(text.size());
 
@@ -33,7 +33,7 @@ void Preprocessor::removePunctuation(std::string &text){
     text = std::move(result);
 }
 
-std::vector<std::string> Preprocessor::tokenize(std::string_view text){
+std::vector<std::string> ClassicalPreprocessor::tokenize(std::string_view text){
     std::vector<std::string> tokens;
     size_t start = 0;
     const size_t n = text.size();
@@ -57,7 +57,7 @@ std::vector<std::string> Preprocessor::tokenize(std::string_view text){
     return tokens;
 }
 
-void Preprocessor::removeStopwords(std::vector<std::string> &tokens){
+void ClassicalPreprocessor::removeStopwords(std::vector<std::string> &tokens){
     std::vector<std::string> clean;
     clean.reserve(tokens.size());
 
@@ -71,7 +71,7 @@ void Preprocessor::removeStopwords(std::vector<std::string> &tokens){
     tokens = std::move(clean);
 }
 
-void Preprocessor::stem(std::vector<std::string> &tokens) {
+void ClassicalPreprocessor::stem(std::vector<std::string> &tokens) {
     std::vector<std::string> stemmed;
     stemmed.reserve(tokens.size());
 

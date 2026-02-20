@@ -1,13 +1,15 @@
 #pragma once
 
+#include "IPreprocessor.hpp"
+
 #include <string>
 #include <string_view>
 #include <vector>
 #include <unordered_set>
 
-class Preprocessor{
+class ClassicalPreprocessor : public IPreprocessor {
 public:
-    std::vector<std::string> preprocessFully(std::string text);
+    std::vector<std::string> preprocess(std::string text) override;
 
 private:
     inline static const std::unordered_set<std::string> stopwords{
