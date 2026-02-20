@@ -1,5 +1,0 @@
-if(EXISTS "/home/nati/2026/projects/distributed_text_analysis_service/build/tests/unit/test_preprocessor[1]_tests.cmake")
-  include("/home/nati/2026/projects/distributed_text_analysis_service/build/tests/unit/test_preprocessor[1]_tests.cmake")
-else()
-  add_test(test_preprocessor_NOT_BUILT test_preprocessor_NOT_BUILT)
-endif()
