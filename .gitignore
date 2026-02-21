@@ -26,3 +26,7 @@ src/scripts/
 build/
 build/src
 build/src/nlp/libnlp_module.a
+
+# Model
+
+ml/onnx_model/
