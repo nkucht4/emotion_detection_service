@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-class IPreprocessor {
+class IPreprocessor{
 public:
     virtual ~IPreprocessor() = default;
 

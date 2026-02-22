@@ -7,7 +7,7 @@
 #include <vector>
 #include <unordered_set>
 
-class ClassicalPreprocessor : public IPreprocessor {
+class ClassicalPreprocessor : public IPreprocessor{
 public:
     std::vector<std::string> preprocess(std::string text) override;
 
