@@ -9,36 +9,47 @@ void ONNXModel::load(const std::string& model_path){
 
     session_ = std::make_unique<Ort::Session>(env_, model_path.c_str(), session_options);
 
-    input_names_ = session_->GetInputNames();
-    output_names_ = session_->GetOutputNames();
+    auto input_names_str = session_->GetInputNames();
+    auto output_names_str = session_->GetOutputNames();
+
+    input_names_storage_.clear();
+    output_names_storage_.clear();
+    for (const auto& name : input_names_str) input_names_storage_.push_back(name);
+    for (const auto& name : output_names_str) output_names_storage_.push_back(name);
+
+    input_names_.clear();
+    for (const auto& s : input_names_storage_) input_names_.push_back(s.c_str());
+
+    output_names_.clear();
+    for (const auto& s : output_names_storage_) output_names_.push_back(s.c_str());
 }
 
 std::vector<float> ONNXModel::predict(const std::string& input_text){
     std::vector<const char*> input_strs = { input_text.c_str() };
-    std::vector<int64_t> input_shape = {1};
+    std::vector<int64_t> input_shape = {1, 1};
 
     Ort::Value input_tensor = Ort::Value::CreateTensor(
-        allocator_, 
-        input_shape.data(), 
-        input_shape.size(), 
+        allocator_,
+        input_shape.data(),
+        input_shape.size(),
         ONNX_TENSOR_ELEMENT_DATA_TYPE_STRING
     );
 
-    Ort::GetApi().FillStringTensor(
-        input_tensor, 
-        input_strs.data(), 
-        input_strs.size()
-    );
+    const char* input_str = input_text.c_str();
+    Ort::GetApi().FillStringTensor(input_tensor, &input_str, 1);
 
     std::vector<Ort::Value> output_tensors(output_names_.size());
 
+    std::vector<Ort::Value> input_tensors;
+    input_tensors.push_back(std::move(input_tensor));
+
     session_->Run(
-        Ort::RunOptions{nullptr},         
-        input_names_.data(),              
-        &input_tensor,                   
-        1,                          
-        output_names_.data(),       
-        output_tensors.data(),  
+        Ort::RunOptions{nullptr},
+        input_names_.data(),
+        input_tensors.data(),
+        input_tensors.size(),
+        output_names_.data(),
+        output_tensors.data(),
         output_tensors.size()
     );
 

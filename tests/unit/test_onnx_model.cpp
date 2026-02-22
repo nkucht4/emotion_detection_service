@@ -6,7 +6,7 @@ protected:
     ONNXModel model;
 
     void SetUp() override {
-        model.load("path/to/your/test_model.onnx");
+        model.load(TEST_MODEL_PATH);
     }
 };
 

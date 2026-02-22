@@ -27,6 +27,10 @@ build/
 build/src
 build/src/nlp/libnlp_module.a
 
-protobuf/
+# Model
 
-onnxruntime*
+ml/onnx_model/
+
+ml/onnx_test_model/
+onnxruntime-linux-x64-1.24.2.tgz
+onnxruntime-linux-x64-1.24.2/
