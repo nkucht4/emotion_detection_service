@@ -1,4 +1,5 @@
 set(ONNXRUNTIME_DIR ${CMAKE_SOURCE_DIR}/onnxruntime-linux-x64-1.24.2)
+set(EIGEN3_DIR ${CMAKE_SOURCE_DIR}/eigen)
 
 add_library(onnxruntime SHARED IMPORTED)
 
@@ -14,6 +15,7 @@ add_library(nlp_module STATIC
 
 target_include_directories(nlp_module PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../include
+    ${EIGEN3_DIR}
 )
 
 target_link_libraries(nlp_module PUBLIC

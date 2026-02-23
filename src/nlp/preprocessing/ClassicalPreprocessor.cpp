@@ -1,13 +1,55 @@
 #include "nlp/preprocessing/ClassicalPreprocessor.hpp"
 
 #include <cctype>
+#include <fstream>
 
-std::string ClassicalPreprocessor::preprocess(std::string text){
+ClassicalPreprocessor::ClassicalPreprocessor(
+    const std::string &vocab_file, const std::string &idf_file){
+        loadVocabulary(vocab_file);
+        loadIDF(idf_file);
+}
+
+void ClassicalPreprocessor::loadVocabulary(const std::string &path){
+    std::ifstream file(path);
+    if (!file) throw std::runtime_error("Cannot open vocab file");
+    std::string token;
+    size_t idx = 0;
+    while (file >> token) {
+        vocab[token] = idx++;
+    }
+}
+
+void ClassicalPreprocessor::loadIDF(const std::string &path){
+    std::ifstream file(path);
+    if (!file) throw std::runtime_error("Cannot open idf file");
+    std::vector<float> values;
+    float val;
+    while (file >> val) {
+        values.push_back(val);
+    }
+    idf = Eigen::Map<Eigen::VectorXf>(values.data(), values.size());
+}
+
+Eigen::VectorXf ClassicalPreprocessor::preprocessToVector(std::string text){
     lowercase(text);
     removePunctuation(text);
     
     std::vector<std::string> tokens = tokenize(text);
+    removeStopwords(tokens);
+    stem(tokens);
 
+    std::vector<std::string> all_tokens = tokens;
+    auto bigrams = generateNgrams(tokens, 2);
+    all_tokens.insert(all_tokens.end(), bigrams.begin(), bigrams.end());
+
+    return computeTFIDF(all_tokens);;
+}
+
+std::string ClassicalPreprocessor::preprocessToString(std::string text){
+    lowercase(text);
+    removePunctuation(text);
+    
+    std::vector<std::string> tokens = tokenize(text);
     removeStopwords(tokens);
     stem(tokens);
 
@@ -109,4 +151,41 @@ std::string ClassicalPreprocessor::join(std::vector<std::string> &tokens){
         res.pop_back();
     }
     return res;
+}
+
+std::vector<std::string> ClassicalPreprocessor::generateNgrams(
+    const std::vector<std::string>& tokens, int n){
+    std::vector<std::string> ngrams;
+    if (tokens.size() < static_cast<size_t>(n)) return ngrams;
+
+    for (size_t i = 0; i <= tokens.size() - n; ++i) {
+        std::string gram = tokens[i];
+        for (int j = 1; j < n; ++j) {
+            gram += " " + tokens[i + j];
+        }
+        ngrams.push_back(gram);
+    }
+    return ngrams;
+}
+
+Eigen::VectorXf ClassicalPreprocessor::computeTFIDF(const std::vector<std::string> &tokens){
+    if (vocab.empty() || idf.size() != vocab.size())
+        return Eigen::VectorXf::Zero(vocab.size());
+        
+    Eigen::VectorXf tfidf = Eigen::VectorXf::Zero(vocab.size());
+    std::unordered_map<size_t, int> term_count;
+
+    for (auto &token : tokens) {
+        auto it = vocab.find(token);
+        if (it != vocab.end()) 
+            term_count[it->second]++;
+    }
+
+    int total_terms = tokens.empty() ? 1 : static_cast<int>(tokens.size());
+
+    for (auto &[idx, count] : term_count) {
+        tfidf[idx] = (count / float(total_terms)) * idf[idx];
+    }
+
+    return tfidf;
 }

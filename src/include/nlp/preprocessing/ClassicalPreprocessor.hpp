@@ -9,9 +9,16 @@
 
 class ClassicalPreprocessor : public IPreprocessor{
 public:
-    std::string preprocess(std::string text) override;
+    ClassicalPreprocessor(const std::string &vocab_file, const std::string &idf_file);
+
+    std::string preprocessToString(std::string text) override;
+
+    Eigen::VectorXf preprocessToVector(std::string text) override;
 
 private:
+    std::unordered_map<std::string, size_t> vocab;
+    Eigen::VectorXf idf; 
+
     inline static const std::unordered_set<std::string> stopwords{
         "a", "an", "the", "and", "or", "but", "if", "in", "on", "with", "to", "of",
         "for", "at", "by", "from", "up", "down", "out", "over", "under", "again",
@@ -28,15 +35,17 @@ private:
         "ing", "ed", "ly", "s", "es", "er", "est", "ment", "ness", "ful", "less", "able"
     };
 
+    void loadVocabulary(const std::string &path);
+    void loadIDF(const std::string &path);
+
     void lowercase(std::string &text);
-
     void removePunctuation(std::string &text);
-
     std::vector<std::string> tokenize(std::string_view text);
-
     void removeStopwords(std::vector<std::string> &tokens);
-
     void stem(std::vector<std::string> &tokens);
-
     std::string join(std::vector<std::string> &tokens);
+
+    std::vector<std::string> generateNgrams(const std::vector<std::string> &tokens, int n);
+
+    Eigen::VectorXf computeTFIDF(const std::vector<std::string> &tokens);
 };

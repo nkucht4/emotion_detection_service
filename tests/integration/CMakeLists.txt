@@ -14,6 +14,8 @@ target_link_libraries(test_integration PRIVATE nlp_module gtest_main)
 
 target_compile_definitions(test_integration
     PRIVATE TEST_MODEL_PATH="${CMAKE_SOURCE_DIR}/ml/onnx_test_model/emotion_classifier.onnx"
+    TEST_VOCAB_PATH="${CMAKE_SOURCE_DIR}/ml/onnx_test_model/vocab.txt"
+    TEST_IDF_PATH="${CMAKE_SOURCE_DIR}/ml/onnx_test_model/idf.txt"
 )
 
 include(GoogleTest)
