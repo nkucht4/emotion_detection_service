@@ -7,5 +7,5 @@
 
 class TransformerPreprocessor : public IPreprocessor{
 public:
-    std::vector<std::string> preprocess(std::string text) override;
+    std::string preprocess(std::string text) override;
 };

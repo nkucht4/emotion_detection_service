@@ -9,7 +9,7 @@
 
 class ClassicalPreprocessor : public IPreprocessor{
 public:
-    std::vector<std::string> preprocess(std::string text) override;
+    std::string preprocess(std::string text) override;
 
 private:
     inline static const std::unordered_set<std::string> stopwords{
@@ -37,4 +37,6 @@ private:
     void removeStopwords(std::vector<std::string> &tokens);
 
     void stem(std::vector<std::string> &tokens);
+
+    std::string join(std::vector<std::string> &tokens);
 };

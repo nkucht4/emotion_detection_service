@@ -16,7 +16,7 @@ TEST_F(ONNXModelTest, LoadModel){
 }
 
 TEST_F(ONNXModelTest, PredictSingleInput){
-    std::string input = "Hello world";
+    std::string input = "hello world";
     std::vector<float> output = model.predict(input);
     EXPECT_FALSE(output.empty());
 }

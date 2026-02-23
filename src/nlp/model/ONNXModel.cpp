@@ -53,8 +53,9 @@ std::vector<float> ONNXModel::predict(const std::string& input_text){
         output_tensors.size()
     );
 
-    float* float_array = output_tensors[0].GetTensorMutableData<float>();
-    size_t output_size = output_tensors[0].GetTensorTypeAndShapeInfo().GetElementCount();
+    Ort::Value& output_tensor = output_tensors[0];
+    float* float_array = output_tensor.GetTensorMutableData<float>();
+    size_t output_size = output_tensor.GetTensorTypeAndShapeInfo().GetElementCount();
 
-    std::vector<float> output(float_array, float_array + output_size);
+    return std::vector<float>(float_array, float_array + output_size);
 }

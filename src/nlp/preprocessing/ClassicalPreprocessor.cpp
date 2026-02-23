@@ -2,7 +2,7 @@
 
 #include <cctype>
 
-std::vector<std::string> ClassicalPreprocessor::preprocess(std::string text){
+std::string ClassicalPreprocessor::preprocess(std::string text){
     lowercase(text);
     removePunctuation(text);
     
@@ -11,7 +11,7 @@ std::vector<std::string> ClassicalPreprocessor::preprocess(std::string text){
     removeStopwords(tokens);
     stem(tokens);
 
-    return tokens;
+    return join(tokens);
 }
 
 void ClassicalPreprocessor::lowercase(std::string &text){
@@ -97,4 +97,16 @@ void ClassicalPreprocessor::stem(std::vector<std::string> &tokens) {
     }
 
     tokens = std::move(stemmed);
+}
+
+std::string ClassicalPreprocessor::join(std::vector<std::string> &tokens){
+    std::string res{};
+    if (!tokens.empty()){
+        for (auto token : tokens){
+            res.append(token);
+            res.append(" ");
+        }
+        res.pop_back();
+    }
+    return res;
 }
