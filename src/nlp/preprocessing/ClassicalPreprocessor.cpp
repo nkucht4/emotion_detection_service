@@ -12,10 +12,14 @@ ClassicalPreprocessor::ClassicalPreprocessor(
 void ClassicalPreprocessor::loadVocabulary(const std::string &path){
     std::ifstream file(path);
     if (!file) throw std::runtime_error("Cannot open vocab file");
+
+    vocab.clear();
     std::string token;
     size_t idx = 0;
-    while (file >> token) {
-        vocab[token] = idx++;
+    while (std::getline(file, token)) {
+        if (!token.empty()) {
+            vocab[token] = idx++;
+        }
     }
 }
 
@@ -171,7 +175,7 @@ std::vector<std::string> ClassicalPreprocessor::generateNgrams(
 Eigen::VectorXf ClassicalPreprocessor::computeTFIDF(const std::vector<std::string> &tokens){
     if (vocab.empty() || idf.size() != vocab.size())
         return Eigen::VectorXf::Zero(vocab.size());
-        
+
     Eigen::VectorXf tfidf = Eigen::VectorXf::Zero(vocab.size());
     std::unordered_map<size_t, int> term_count;
 

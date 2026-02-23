@@ -59,3 +59,40 @@ std::vector<float> ONNXModel::predict(const std::string& input_text){
 
     return std::vector<float>(float_array, float_array + output_size);
 }
+
+std::vector<float> ONNXModel::predict(const Eigen::VectorXf& input_vec){
+    std::vector<int64_t> shape = {1, static_cast<int64_t>(input_vec.size())};
+
+    Ort::MemoryInfo memory_info = Ort::MemoryInfo::CreateCpu(
+        OrtDeviceAllocator, OrtMemTypeCPU
+    );
+
+    Ort::Value input_tensor = Ort::Value::CreateTensor<float>(
+        memory_info, 
+        const_cast<float*>(input_vec.data()),
+        input_vec.size(),
+        shape.data(),
+        shape.size()
+    );
+
+    std::vector<Ort::Value> input_tensors;
+    input_tensors.push_back(std::move(input_tensor));
+
+    std::vector<Ort::Value> output_tensors(output_names_.size());
+
+    session_->Run(
+        Ort::RunOptions{nullptr},
+        input_names_.data(),
+        input_tensors.data(),
+        input_tensors.size(),
+        output_names_.data(),
+        output_tensors.data(),
+        output_tensors.size()
+    );
+
+    Ort::Value& output_tensor = output_tensors[0];
+    float* float_array = output_tensor.GetTensorMutableData<float>();
+    size_t output_size = output_tensor.GetTensorTypeAndShapeInfo().GetElementCount();
+
+    return std::vector<float>(float_array, float_array + output_size);
+}

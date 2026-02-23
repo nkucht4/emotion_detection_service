@@ -14,6 +14,8 @@ public:
 
     std::vector<float> predict(const std::string& input_text) override;
 
+    std::vector<float> predict(const Eigen::VectorXf& input_vec) override;
+
     const std::vector<const char*>& getInputNames(){ return input_names_; }
 
     const std::vector<const char*>& getOutputNames(){ return output_names_; }
