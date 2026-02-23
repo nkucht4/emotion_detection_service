@@ -16,12 +16,16 @@ TEST_F(ONNXModelTest, LoadModel){
 }
 
 TEST_F(ONNXModelTest, PredictSingleInput){
-    std::string input = "hello world";
+    Eigen::VectorXf input(20000); 
+    input.setRandom();
+
     std::vector<float> output = model.predict(input);
     EXPECT_FALSE(output.empty());
 }
 
 TEST_F(ONNXModelTest, EmptyInput){
-    std::vector<float> output = model.predict("");
+    Eigen::VectorXf input(20000);
+    input.setZero();
+    std::vector<float> output = model.predict(input);
     EXPECT_FALSE(output.empty());
 }

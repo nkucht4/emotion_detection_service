@@ -9,7 +9,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(test_unit test_classical_preprocessor.cpp test_onnx_model.cpp)
+add_executable(test_unit test_classical_preprocessor.cpp test_onnx_model.cpp test_label_mapper.cpp)
 target_link_libraries(test_unit PRIVATE nlp_module gtest_main)
 
 target_compile_definitions(test_unit
