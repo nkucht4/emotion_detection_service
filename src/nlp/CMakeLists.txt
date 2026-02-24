@@ -11,6 +11,7 @@ set_target_properties(onnxruntime PROPERTIES
 add_library(nlp_module STATIC
     preprocessing/ClassicalPreprocessor.cpp
     model/ONNXModel.cpp
+    pipeline/NLPPipeline.cpp
 )
 
 target_include_directories(nlp_module PUBLIC

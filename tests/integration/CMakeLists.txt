@@ -9,7 +9,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(test_integration test_preprocess_model.cpp test_model_mapper.cpp)
+add_executable(test_integration test_preprocess_model.cpp test_model_mapper.cpp 
+    test_full_nlp_pipeline.cpp )
 target_link_libraries(test_integration PRIVATE nlp_module gtest_main)
 
 target_compile_definitions(test_integration
