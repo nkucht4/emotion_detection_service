@@ -8,18 +8,6 @@ message Text {
   string text = 1;
 }
 
-enum Emotion {
-  UNKNOWN = 0;
-  JOY = 1;
-  SADNESS = 2;
-  ANGER = 3;
-}
-
-message EmotionScore {
-  Emotion emotion = 1;
-  float confidence = 2;
-}
-
 message EmotionResponse {
-    repeated EmotionScore emotions = 1;
+    map<string, float> scores = 1;
 }

@@ -1,5 +1,5 @@
 add_library(service STATIC
-    # sources
+    EmotionService.cpp
 )
 
 target_include_directories(service PUBLIC
@@ -12,4 +12,6 @@ target_link_libraries(service PUBLIC
     gRPC::grpc++            
     protobuf::libprotobuf
     pthread
+    PRIVATE
+        nlohmann_json::nlohmann_json
 )
