@@ -40,7 +40,14 @@ emotion_detection_service
 ├── src/
 │ ├── generated/        # Auto-generated files from gRPC compilation
 │ ├── include/          # Public header files
-│ ├── nlp/              # Core NLP module containing the pipeline
+│ │ ├── nlp/
+│ │ │ ├── preprocessing/
+│ │ │ ├── model/
+│ │ │ ├── pipeline/
+│ │ │ ├── utils/        # Header-only utilities for NLP module (normalization, label mapping)  
+│ │ ├── service/          
+│ │ ├── utils/          # Header-only global utilities (configuration parser)    
+│ ├── nlp/              # Core NLP module 
 │ │ ├── preprocessing/  # Text cleaning, tokenization, and vectorization
 │ │ ├── model/          # ONNX model loading and inference
 │ │ ├── pipeline/       # Orchestrates preprocessing, model inference, and label mapping
